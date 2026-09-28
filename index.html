@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeRoute — Live Journey</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body { margin: 0; font-family: -apple-system, sans-serif; }
+    #map { height: 70vh; }
+    #info { padding: 16px; }
+    #status { font-weight: 700; font-size: 18px; }
+    #meta { color: #6B7280; font-size: 14px; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="info">
+    <div id="status">Loading journey...</div>
+    <div id="meta"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+
+    const map = L.map('map').setView([-26.1819, 27.9983], 15);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+    let userMarker = null;
+    let destMarker = null;
+
+    async function poll() {
+      if (!token) {
+        document.getElementById('status').textContent = 'No journey link provided.';
+        return;
+      }
+      const { data, error } = await supabase.rpc('get_shared_journey', { p_token: token });
+
+      if (error || !data) {
+        document.getElementById('status').textContent = 'This journey has ended or the link is invalid.';
+        return;
+      }
+
+      document.getElementById('status').textContent = `Heading to ${data.destination_name}`;
+      document.getElementById('meta').textContent = `From ${data.origin_name} · ${data.estimated_minutes} min journey`;
+
+      if (!destMarker) {
+        destMarker = L.marker([data.destination_latitude, data.destination_longitude]).addTo(map);
+      }
+
+      if (data.latest_checkpoint) {
+        const { latitude, longitude } = data.latest_checkpoint;
+        if (!userMarker) {
+          userMarker = L.circleMarker([latitude, longitude], { radius: 8, fillColor: '#0D9488', color: '#fff', weight: 2, fillOpacity: 1 }).addTo(map);
+          map.setView([latitude, longitude], 16);
+        } else {
+          userMarker.setLatLng([latitude, longitude]);
+        }
+      }
+    }
+
+    poll();
+    setInterval(poll, 4000); // poll every 4 seconds
+  </script>
+</body>
+</html>
