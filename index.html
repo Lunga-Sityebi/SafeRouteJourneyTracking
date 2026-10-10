@@ -1,15 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
   />
+  <meta name="theme-color" content="#1DB56C" />
   <meta name="referrer" content="no-referrer" />
-  <meta name="theme-color" content="#0D9488" />
-
   <title>SafeRoute | Journey Tracking</title>
 
   <link
@@ -19,430 +17,548 @@
 
   <style>
     :root {
-      --teal: #0D9488;
-      --dark: #123D38;
-      --muted: #64748B;
-      --border: #E1E9E7;
-      --bg: #F3F7F6;
-      --amber: #D97706;
-      --danger: #B91C1C;
+      --green: #1db56c;
+      --green-dark: #148452;
+      --green-soft: #e9fbf1;
+      --text: #15222b;
+      --muted: #6e7a86;
+      --border: #e9edf1;
+      --white: #ffffff;
+      --bg: #f4f7f5;
+      --danger: #d83c3c;
+      --warning: #f59e0b;
+      --shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--dark);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #2fc16f 0%, #22b06a 140px, var(--bg) 140px);
+      color: var(--text);
     }
 
-    header {
-      background: white;
-      border-bottom: 1px solid var(--border);
-      padding: 18px 20px;
+    .page {
+      max-width: 520px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 18px 14px 32px;
     }
 
-    .header-inner {
-      max-width: 760px;
-      margin: auto;
+    .topbar {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      color: white;
     }
 
     .brand {
-      font-size: 19px;
+      font-size: 20px;
       font-weight: 900;
-      letter-spacing: -.5px;
+      letter-spacing: -0.4px;
     }
 
-    .brand-icon { color: var(--teal); }
-
-    .badge {
-      border-radius: 24px;
-      background: #CCFBF1;
-      color: #0F766E;
-      font-size: 10px;
-      font-weight: 900;
+    .mode-pill {
+      min-height: 34px;
       padding: 8px 12px;
-    }
-
-    .badge.demo {
-      background: #FEF3C7;
-      color: #92400E;
-    }
-
-    .badge.error {
-      background: #FEE2E2;
-      color: #991B1B;
-    }
-
-    main {
-      max-width: 760px;
-      margin: auto;
-      padding: 19px;
-    }
-
-    .card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 19px;
-      padding: 18px;
-      margin-bottom: 15px;
-      box-shadow: 0 5px 20px rgba(16, 55, 49, .035);
-    }
-
-    .eyebrow {
-      font-size: 10px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      color: var(--muted);
-    }
-
-    h1 {
-      font-size: 23px;
-      margin: 8px 0;
-      letter-spacing: -.5px;
-    }
-
-    h2 {
-      font-size: 16px;
-      margin: 0 0 15px;
-    }
-
-    .muted {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .status-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin-top: 13px;
-    }
-
-    .dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--teal);
-    }
-
-    .dot.paused { background: var(--amber); }
-    .dot.danger { background: var(--danger); }
-
-    .status-text {
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .progress-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 19px;
+      border-radius: 999px;
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      color: white;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(10px);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
     }
 
-    .progress-track {
-      margin-top: 9px;
-      width: 100%;
-      height: 9px;
-      background: #E2E8F0;
-      border-radius: 9px;
+    .mode-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #ffffff;
+      opacity: 0.95;
+    }
+
+    .mode-pill.demo {
+      background: rgba(255, 243, 205, 0.22);
+    }
+
+    .mode-pill.error {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .phone-shell {
+      background: var(--white);
+      border-radius: 34px;
+      box-shadow: var(--shadow);
       overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.35);
     }
 
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      background: var(--teal);
-      border-radius: 9px;
-      transition: width .5s ease;
+    .map-wrap {
+      position: relative;
+      background: #dfe9e6;
     }
 
     #map {
-      height: 370px;
-      border-radius: 15px;
-      background: #E4EDE9;
-      overflow: hidden;
+      height: 420px;
+      width: 100%;
+      background: #dfe9e6;
     }
 
-    .map-caption {
+    .map-overlay-top {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      top: 14px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 12px;
+      align-items: flex-start;
+      pointer-events: none;
+      z-index: 1000;
     }
 
-    .legend {
-      display: flex;
+    .floating-card {
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      box-shadow: 0 10px 26px rgba(17,24,39,0.10);
+      padding: 12px 14px;
+      max-width: 74%;
+      pointer-events: auto;
+    }
+
+    .floating-card .eyebrow {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--muted);
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .floating-card .title {
+      font-size: 18px;
+      line-height: 1.15;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    .mini-status {
+      margin-top: 7px;
+      display: inline-flex;
       align-items: center;
       gap: 7px;
       color: var(--muted);
       font-size: 11px;
+      font-weight: 700;
     }
 
-    .legend-line {
-      height: 4px;
-      width: 25px;
-      border-radius: 5px;
-      background: var(--teal);
-    }
-
-    .legend-location {
-      height: 11px;
-      width: 11px;
+    .mini-status .live-dot {
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: var(--teal);
-      border: 2px solid white;
-      box-shadow: 0 0 0 1px var(--teal);
+      background: var(--green);
     }
 
-    .tiles {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .eta-bubble {
+      pointer-events: auto;
+      min-width: 72px;
+      height: 72px;
+      border-radius: 999px;
+      background: var(--green);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+      text-align: center;
+      padding: 6px;
+    }
+
+    .eta-bubble .value {
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .eta-bubble .label {
+      font-size: 11px;
+      font-weight: 800;
+      opacity: 0.94;
+      margin-top: 3px;
+      text-transform: lowercase;
+    }
+
+    .sheet {
+      margin-top: -8px;
+      background: var(--white);
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 18px 16px 18px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .grabber {
+      width: 42px;
+      height: 4px;
+      border-radius: 999px;
+      background: #d8dee5;
+      margin: 0 auto 14px;
+    }
+
+    .heading-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
       gap: 10px;
     }
 
-    .tile {
+    .heading-block h1 {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.05;
+      letter-spacing: -0.7px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .progress-box {
+      margin-top: 18px;
+      padding: 14px 14px 12px;
+      background: #f7faf8;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .progress-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .progress-head .label {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .progress-head .value {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: #e4ebe7;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--green) 0%, #31cb7d 100%);
+      transition: width 0.4s ease;
+    }
+
+    .progress-meta {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
       padding: 14px;
-      border-radius: 13px;
-      background: #F6FAF9;
       min-width: 0;
     }
 
-    .tile-label {
-      font-size: 9px;
+    .stat-label {
+      font-size: 10px;
       font-weight: 900;
-      letter-spacing: .5px;
       color: var(--muted);
-      margin-bottom: 9px;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
     }
 
-    .tile-value {
-      font-size: 13px;
-      font-weight: 850;
+    .stat-value {
+      font-size: 18px;
+      line-height: 1.15;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.4px;
       overflow-wrap: anywhere;
     }
 
-    .notice {
-      margin-top: 14px;
-      background: #FEF3C7;
-      color: #92400E;
-      border-radius: 12px;
-      padding: 14px;
-      line-height: 1.6;
+    .stat-sub {
+      margin-top: 6px;
       font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .notice {
+      margin-top: 16px;
+      border-radius: 18px;
+      padding: 14px 15px;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 700;
+      display: none;
+    }
+
+    .notice.warning {
+      display: block;
+      background: #fff5e8;
+      color: #a35d00;
+      border: 1px solid #ffe2b8;
     }
 
     .notice.danger {
-      background: #FEE2E2;
-      color: #991B1B;
+      display: block;
+      background: #fff0f0;
+      color: #b42323;
+      border: 1px solid #ffd0d0;
     }
 
-    .hidden { display: none; }
+    .footer-actions {
+      margin-top: 16px;
+    }
 
-    button {
+    .refresh-btn {
       width: 100%;
-      height: 48px;
+      height: 50px;
       border: 0;
-      border-radius: 12px;
-      background: var(--teal);
-      color: white;
-      font-size: 13px;
-      font-weight: 850;
-      margin-top: 15px;
+      outline: none;
       cursor: pointer;
+      border-radius: 16px;
+      background: var(--green);
+      color: white;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+      box-shadow: 0 10px 22px rgba(29, 181, 108, 0.23);
     }
 
-    button:disabled {
-      opacity: .6;
+    .refresh-btn:disabled {
+      opacity: 0.6;
       cursor: default;
     }
 
-    footer {
-      color: #94A3B8;
+    .tiny-note {
+      margin-top: 12px;
       text-align: center;
-      padding: 8px 25px 30px;
+      color: var(--muted);
       font-size: 11px;
-      line-height: 1.8;
+      line-height: 1.6;
+      font-weight: 600;
     }
 
-    @media (max-width: 480px) {
-      main { padding: 12px; }
-      .card { padding: 14px; }
-      #map { height: 310px; }
-      h1 { font-size: 21px; }
-      .tile { padding: 12px; }
+    .leaflet-control-attribution {
+      font-size: 10px !important;
+    }
+
+    @media (max-width: 430px) {
+      #map {
+        height: 390px;
+      }
+
+      .floating-card .title {
+        font-size: 16px;
+      }
+
+      .sheet {
+        padding: 16px 14px 18px;
+      }
+
+      .heading-block h1 {
+        font-size: 22px;
+      }
+
+      .eta-bubble {
+        min-width: 64px;
+        width: 64px;
+        height: 64px;
+      }
+
+      .eta-bubble .value {
+        font-size: 24px;
+      }
+
+      .stats {
+        gap: 10px;
+      }
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <div class="header-inner">
-      <div class="brand">
-        <span class="brand-icon">◆</span>
-        SafeRoute
+  <div class="page">
+    <div class="topbar">
+      <div class="brand">SafeRoute</div>
+      <div id="modePill" class="mode-pill">
+        <span class="mode-dot"></span>
+        <span id="modeText">CONNECTING</span>
       </div>
-      <div id="badge" class="badge">CONNECTING</div>
     </div>
-  </header>
 
-  <main>
-    <section class="card">
-      <div class="eyebrow">PRIVATE JOURNEY TRACKING</div>
-      <h1 id="destination">Connecting...</h1>
-      <p id="description" class="muted">
-        Retrieving journey information.
-      </p>
+    <div class="phone-shell">
+      <div class="map-wrap">
+        <div id="map"></div>
 
-      <div class="status-row">
-        <div id="statusDot" class="dot"></div>
-        <div id="status" class="status-text">
-          Waiting for an update
-        </div>
-      </div>
-
-      <div class="progress-header">
-        <span>JOURNEY PROGRESS</span>
-        <strong id="progressText">—</strong>
-      </div>
-
-      <div class="progress-track">
-        <div id="progressFill" class="progress-fill"></div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Journey map</h2>
-      <div id="map"></div>
-
-      <div class="map-caption">
-        <div class="legend">
-          <div class="legend-line"></div>
-          Planned route
-        </div>
-        <div class="legend">
-          <div class="legend-location"></div>
-          Latest location
-        </div>
-      </div>
-
-      <p class="muted" id="locationAge">
-        Waiting for the first location update.
-      </p>
-
-      <p class="muted" id="routeMessage"></p>
-    </section>
-
-    <section class="card">
-      <h2>Journey details</h2>
-
-      <div class="tiles">
-        <div class="tile">
-          <div class="tile-label">STARTING POINT</div>
-          <div class="tile-value" id="origin">—</div>
-        </div>
-        <div class="tile">
-          <div class="tile-label">DESTINATION</div>
-          <div class="tile-value" id="destinationTile">—</div>
-        </div>
-        <div class="tile">
-          <div class="tile-label">ESTIMATED DURATION</div>
-          <div class="tile-value" id="duration">—</div>
-        </div>
-        <div class="tile">
-          <div class="tile-label">ROUTE DISTANCE</div>
-          <div class="tile-value" id="distance">—</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Safety check-ins</h2>
-
-      <div class="tiles">
-        <div class="tile">
-          <div class="tile-label">CHECK-IN STATUS</div>
-          <div class="tile-value" id="checkinStatus">
-            Waiting
+        <div class="map-overlay-top">
+          <div class="floating-card">
+            <div class="eyebrow">Track journey</div>
+            <div class="title" id="heroTitle">Track their journey</div>
+            <div class="mini-status">
+              <span class="live-dot" id="liveDot"></span>
+              <span id="heroStatus">Connecting to journey…</span>
+            </div>
           </div>
-        </div>
-        <div class="tile">
-          <div class="tile-label">NEXT CHECK-IN</div>
-          <div class="tile-value" id="checkinDue">
-            —
-          </div>
-        </div>
-        <div class="tile">
-          <div class="tile-label">LAST CONFIRMED SAFE</div>
-          <div class="tile-value" id="lastSafe">
-            —
-          </div>
-        </div>
-        <div class="tile">
-          <div class="tile-label">LAST SERVER CHECK</div>
-          <div class="tile-value" id="lastRefresh">
-            —
+
+          <div class="eta-bubble">
+            <div class="value" id="etaMinutes">--</div>
+            <div class="label">min</div>
           </div>
         </div>
       </div>
 
-      <div id="warning" class="notice hidden"></div>
+      <div class="sheet">
+        <div class="grabber"></div>
 
-      <button id="refreshButton">
-        Refresh tracking
-      </button>
-    </section>
-  </main>
+        <div class="heading-row">
+          <div class="heading-block">
+            <h1 id="destinationHeading">Heading to destination</h1>
+            <div class="subtitle" id="subtitleText">
+              Getting the latest journey details…
+            </div>
+          </div>
+        </div>
 
-  <footer>
-    Private journey tracking. Do not forward this link.
-    <br />
-    Location updates depend on the SafeRoute app and network.
-    <br />
-    This service does not replace emergency services.
-  </footer>
+        <div class="progress-box">
+          <div class="progress-head">
+            <div class="label">Journey progress</div>
+            <div class="value" id="progressPercent">--%</div>
+          </div>
 
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  ></script>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+
+          <div class="progress-meta">
+            <span id="arrivalText">Arrival time: --</span>
+            <span id="lastUpdateText">Last update: --</span>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-label">Last check-in</div>
+            <div class="stat-value" id="lastCheckinValue">Not yet</div>
+            <div class="stat-sub" id="lastCheckinSub">Waiting for a confirmed safe check-in</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Next check-in</div>
+            <div class="stat-value" id="nextCheckinValue">--:--</div>
+            <div class="stat-sub" id="nextCheckinSub">Countdown to next check-in</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Status</div>
+            <div class="stat-value" id="journeyStatusValue">Connecting</div>
+            <div class="stat-sub" id="journeyStatusSub">Journey and demo status</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Route</div>
+            <div class="stat-value" id="routeSummaryValue">-- km</div>
+            <div class="stat-sub" id="routeSummarySub">Estimated trip length</div>
+          </div>
+        </div>
+
+        <div id="noticeBox" class="notice"></div>
+
+        <div class="footer-actions">
+          <button id="refreshButton" class="refresh-btn">
+            Refresh tracking
+          </button>
+          <div class="tiny-note">
+            Private SafeRoute journey tracking.<br />
+            Do not forward this link.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
     const PROJECT_REF = "mejzekhkbrwlagvzvzau";
-
     const FUNCTION_URL =
-      "https://" + PROJECT_REF +
-      ".supabase.co/functions/v1/journey-share";
+      `https://${PROJECT_REF}.supabase.co/functions/v1/journey-share`;
 
-    const urlParams = new URLSearchParams(
-      window.location.search
-    );
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
 
-    const token = urlParams.get("token");
-
-    // Avoid leaving the private token in the address bar.
     if (token) {
-      window.history.replaceState(
-        null,
-        "",
-        window.location.pathname
-      );
+      history.replaceState(null, "", window.location.pathname);
     }
 
     const $ = (id) => document.getElementById(id);
 
     const map = L.map("map", {
-      zoomControl: true,
+      zoomControl: false,
+      attributionControl: true,
     }).setView([-26.1819, 27.9983], 13);
+
+    L.control.zoom({ position: "bottomright" }).addTo(map);
 
     L.tileLayer(
       "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -452,16 +568,45 @@
       }
     ).addTo(map);
 
-    let locationMarker = null;
     let routeLine = null;
-    let originMarker = null;
-    let destinationMarker = null;
-    let lastSuccessfulUpdate = 0;
-    let previousRouteKey = "";
-    let initialFitDone = false;
+    let locationMarker = null;
+    let startMarker = null;
+    let endMarker = null;
     let trackingEnded = false;
+    let lastSuccessAt = 0;
+    let latestPayload = null;
+    let routeFitted = false;
 
-    function valid(p) {
+    function formatDateTime(value) {
+      if (!value) return "—";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return "—";
+      return d.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    function formatFullDateTime(value) {
+      if (!value) return "Not yet";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return "Not yet";
+      return d.toLocaleString([], {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    function formatCountdown(seconds) {
+      const s = Math.max(0, Math.floor(seconds));
+      const mins = Math.floor(s / 60);
+      const secs = s % 60;
+      return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    }
+
+    function validPoint(p) {
       return p &&
         Number.isFinite(Number(p.latitude)) &&
         Number.isFinite(Number(p.longitude)) &&
@@ -469,328 +614,317 @@
         Math.abs(Number(p.longitude)) <= 180;
     }
 
-    function formatTime(value) {
-      if (!value) return "Not yet";
+    function setMode(type, text) {
+      const pill = $("modePill");
+      const modeText = $("modeText");
+      modeText.textContent = text;
 
-      const date = new Date(value);
-
-      if (!Number.isFinite(date.getTime())) {
-        return "Unavailable";
-      }
-
-      return date.toLocaleString();
+      pill.className = "mode-pill";
+      if (type === "demo") pill.classList.add("demo");
+      if (type === "error") pill.classList.add("error");
     }
 
-    function updateRoute(geometry) {
-      if (!geometry ||
-          geometry.type !== "LineString" ||
-          !Array.isArray(geometry.coordinates) ||
-          geometry.coordinates.length < 2) {
-        $("routeMessage").textContent =
-          "The planned route has not been uploaded yet.";
+    function drawRoute(geometry) {
+      if (
+        !geometry ||
+        geometry.type !== "LineString" ||
+        !Array.isArray(geometry.coordinates)
+      ) {
         return;
       }
 
-      const coords = geometry.coordinates
-        .filter((p) =>
-          Array.isArray(p) &&
-          p.length >= 2 &&
-          Number.isFinite(Number(p[0])) &&
-          Number.isFinite(Number(p[1])) &&
-          Math.abs(Number(p[0])) <= 180 &&
-          Math.abs(Number(p[1])) <= 90
+      const latLngs = geometry.coordinates
+        .filter((point) =>
+          Array.isArray(point) &&
+          point.length >= 2 &&
+          Number.isFinite(Number(point[0])) &&
+          Number.isFinite(Number(point[1]))
         )
-        .map((p) => [Number(p[1]), Number(p[0])]);
+        .map((point) => [Number(point[1]), Number(point[0])]);
 
-      if (coords.length < 2) return;
-
-      const key = JSON.stringify(coords);
-
-      if (key === previousRouteKey) return;
-
-      previousRouteKey = key;
-      $("routeMessage").textContent = "";
+      if (latLngs.length < 2) return;
 
       if (routeLine) {
-        map.removeLayer(routeLine);
+        routeLine.setLatLngs(latLngs);
+      } else {
+        routeLine = L.polyline(latLngs, {
+          color: "#1DB56C",
+          weight: 6,
+          opacity: 0.95,
+          lineCap: "round",
+          lineJoin: "round",
+        }).addTo(map);
       }
 
-      routeLine = L.polyline(coords, {
-        color: "#0D9488",
-        weight: 6,
-        opacity: .95,
-        lineCap: "round",
-        lineJoin: "round",
-      }).addTo(map);
-
-      if (!initialFitDone) {
+      if (!routeFitted) {
         map.fitBounds(routeLine.getBounds(), {
-          padding: [35, 35],
+          padding: [40, 40],
           maxZoom: 16,
         });
-        initialFitDone = true;
+        routeFitted = true;
       }
     }
 
-    function updateEndpoints(journey) {
-      if (valid(journey?.originLocation) &&
-          !originMarker) {
-        originMarker = L.circleMarker(
-          [
-            journey.originLocation.latitude,
-            journey.originLocation.longitude,
-          ],
+    function drawEndpoints(journey) {
+      if (validPoint(journey?.originLocation) && !startMarker) {
+        startMarker = L.circleMarker(
+          [journey.originLocation.latitude, journey.originLocation.longitude],
           {
             radius: 6,
-            color: "#FFFFFF",
+            color: "#fff",
             weight: 2,
-            fillColor: "#0F172A",
+            fillColor: "#15222B",
             fillOpacity: 1,
           }
-        ).addTo(map).bindPopup("Journey start");
+        ).addTo(map);
       }
 
-      if (valid(journey?.destinationLocation) &&
-          !destinationMarker) {
-        destinationMarker = L.circleMarker(
-          [
-            journey.destinationLocation.latitude,
-            journey.destinationLocation.longitude,
-          ],
+      if (validPoint(journey?.destinationLocation) && !endMarker) {
+        endMarker = L.circleMarker(
+          [journey.destinationLocation.latitude, journey.destinationLocation.longitude],
           {
             radius: 7,
-            color: "#FFFFFF",
+            color: "#fff",
             weight: 2,
-            fillColor: "#DC2626",
+            fillColor: "#D83C3C",
             fillOpacity: 1,
           }
-        ).addTo(map).bindPopup("Destination");
+        ).addTo(map);
       }
     }
 
-    function updateLocation(location) {
-      if (!valid(location)) {
-        $("locationAge").textContent =
-          "Waiting for the first journey checkpoint.";
-        return;
-      }
+    function drawLiveLocation(location) {
+      if (!validPoint(location)) return;
 
-      const position = [
-        Number(location.latitude),
-        Number(location.longitude),
-      ];
+      const coords = [Number(location.latitude), Number(location.longitude)];
 
-      if (!locationMarker) {
-        locationMarker = L.circleMarker(position, {
+      if (locationMarker) {
+        locationMarker.setLatLng(coords);
+      } else {
+        locationMarker = L.circleMarker(coords, {
           radius: 10,
-          color: "#FFFFFF",
+          color: "#fff",
           weight: 3,
-          fillColor: "#0D9488",
+          fillColor: "#1DB56C",
           fillOpacity: 1,
-        }).addTo(map).bindPopup("Latest reported position");
-
-        if (!initialFitDone) {
-          map.setView(position, 16);
-          initialFitDone = true;
-        }
-      } else {
-        locationMarker.setLatLng(position);
-      }
-
-      const ageMs =
-        Date.now() - Date.parse(location.updatedAt);
-
-      if (!Number.isFinite(ageMs)) {
-        $("locationAge").textContent =
-          "Location update time unavailable.";
-        return;
-      }
-
-      const minutes = Math.max(
-        0,
-        Math.floor(ageMs / 60000)
-      );
-
-      $("locationAge").textContent =
-        "Location last reported " +
-        minutes + " minute(s) ago." +
-        (minutes >= 2
-          ? " Position may be outdated."
-          : "");
-    }
-
-    function updateJourney(data) {
-      const journey = data.journey ?? {};
-      const demo = data.demo ?? {};
-
-      $("destination").textContent =
-        journey.destination ?? "Journey in progress";
-
-      $("origin").textContent =
-        journey.origin ?? "Unknown";
-
-      $("destinationTile").textContent =
-        journey.destination ?? "Unknown";
-
-      $("duration").textContent =
-        journey.estimatedMinutes != null
-          ? journey.estimatedMinutes + " min"
-          : "—";
-
-      $("distance").textContent =
-        journey.distanceKm != null
-          ? Number(journey.distanceKm).toFixed(2) + " km"
-          : "—";
-
-      const badge = $("badge");
-      const status = $("status");
-      const dot = $("statusDot");
-
-      if (!demo.known) {
-        badge.textContent = "MODE UNKNOWN";
-        badge.className = "badge demo";
-
-        status.textContent =
-          "Waiting for tracking state from SafeRoute";
-        dot.className = "dot paused";
-
-        $("description").textContent =
-          "The app has not uploaded its route and demo status.";
-      } else if (demo.simulated) {
-        badge.textContent = "DEMO";
-        badge.className = "badge demo";
-
-        status.textContent = demo.paused
-          ? "Simulated journey paused"
-          : "Simulated journey running";
-
-        dot.className = demo.paused
-          ? "dot paused"
-          : "dot";
-
-        $("description").textContent =
-          "This is a simulated journey. " +
-          "The location is not the person's real GPS position.";
-      } else {
-        badge.textContent = "LIVE";
-        badge.className = "badge";
-
-        status.textContent = "Journey active";
-        dot.className = "dot";
-
-        $("description").textContent =
-          "Showing the latest location sent by SafeRoute.";
-      }
-
-      if (typeof demo.progress === "number") {
-        const progress = Math.max(
-          0,
-          Math.min(100, demo.progress * 100)
-        );
-
-        $("progressText").textContent =
-          Math.round(progress) + "%";
-
-        $("progressFill").style.width =
-          progress + "%";
-      } else {
-        $("progressText").textContent = "—";
-        $("progressFill").style.width = "0%";
-      }
-
-      updateEndpoints(journey);
-      updateRoute(data.route);
-      updateLocation(data.location);
-    }
-
-    function updateCheckin(checkin, checkedAt) {
-      const state = checkin?.status ?? "unknown";
-
-      const labels = {
-        active: "Awaiting confirmation",
-        completed: "Confirmed safe",
-        expired: "Overdue",
-        overdue: "Overdue",
-        cancelled: "Cancelled",
-        unknown: "Unavailable",
-      };
-
-      $("checkinStatus").textContent =
-        labels[state] ?? state;
-
-      $("checkinDue").textContent =
-        state === "active"
-          ? formatTime(checkin.dueAt)
-          : "—";
-
-      $("lastSafe").textContent =
-        formatTime(checkin?.lastConfirmedAt);
-
-      $("lastRefresh").textContent =
-        formatTime(checkedAt);
-
-      const warning = $("warning");
-
-      if (state === "overdue" ||
-          state === "expired") {
-        warning.className = "notice danger";
-        warning.textContent =
-          "A safety check-in is overdue. This does not " +
-          "confirm an emergency. Try contacting the " +
-          "person directly. If you believe they are " +
-          "in danger, contact emergency services.";
-      } else {
-        warning.className = "notice hidden";
+        }).addTo(map);
       }
     }
 
     function clearSensitiveMap() {
-      for (const layer of [
-        locationMarker,
-        routeLine,
-        originMarker,
-        destinationMarker,
-      ]) {
-        if (layer) map.removeLayer(layer);
+      if (routeLine) map.removeLayer(routeLine);
+      if (locationMarker) map.removeLayer(locationMarker);
+      if (startMarker) map.removeLayer(startMarker);
+      if (endMarker) map.removeLayer(endMarker);
+
+      routeLine = null;
+      locationMarker = null;
+      startMarker = null;
+      endMarker = null;
+    }
+
+    function setNotice(type, text) {
+      const box = $("noticeBox");
+      if (!text) {
+        box.className = "notice";
+        box.textContent = "";
+        return;
       }
 
-      locationMarker = null;
-      routeLine = null;
-      originMarker = null;
-      destinationMarker = null;
+      box.className = `notice ${type}`;
+      box.textContent = text;
+    }
 
-      $("destination").textContent =
-        "Tracking unavailable";
+    function updateMainUI(data) {
+      const journey = data.journey ?? {};
+      const demo = data.demo ?? {};
+      const checkin = data.checkin ?? {};
+      const location = data.location ?? null;
 
-      $("origin").textContent = "—";
-      $("destinationTile").textContent = "—";
-      $("progressText").textContent = "—";
-      $("progressFill").style.width = "0%";
-      $("locationAge").textContent =
-        "Location data is no longer available.";
+      const travelerName = journey.travelerName || "their";
+      const destinationName = journey.destination || "destination";
+      const estimatedMinutes = Number(journey.estimatedMinutes ?? 0);
+      const distanceKm = Number(journey.distanceKm ?? 0);
+      const progress = Math.max(0, Math.min(1, Number(demo.progress ?? 0)));
+
+      $("heroTitle").textContent = `Track ${travelerName}'s journey`;
+      $("destinationHeading").textContent = destinationName;
+      $("routeSummaryValue").textContent =
+        Number.isFinite(distanceKm) && distanceKm > 0
+          ? `${distanceKm.toFixed(2)} km`
+          : "-- km";
+
+      $("routeSummarySub").textContent =
+        Number.isFinite(estimatedMinutes) && estimatedMinutes > 0
+          ? `${estimatedMinutes} min estimated duration`
+          : "Estimated trip length";
+
+      drawEndpoints(journey);
+      drawRoute(data.route);
+      drawLiveLocation(location);
+
+      let heroStatus = "Journey active";
+      let statusLabel = "Active";
+      let statusSub = "Tracking journey progress";
+      let subtitle = "Following the latest route and check-ins";
+      let liveDotColor = "#1DB56C";
+
+      if (demo.known && demo.simulated) {
+        setMode("demo", "DEMO");
+        heroStatus = demo.paused ? "Demo paused" : "Demo in progress";
+        statusLabel = demo.paused ? "Paused" : "Demo running";
+        statusSub = demo.paused
+          ? "Simulation paused in the app"
+          : "Simulation moving in the app";
+        subtitle = "This is a simulated journey shared from the app";
+        liveDotColor = demo.paused ? "#f59e0b" : "#1DB56C";
+      } else if (demo.known && !demo.simulated) {
+        setMode("live", "LIVE");
+        heroStatus = "Live location on";
+        statusLabel = "Live journey";
+        statusSub = "Tracking real app updates";
+        subtitle = "Tracking the latest location shared from SafeRoute";
+        liveDotColor = "#1DB56C";
+      } else {
+        setMode("demo", "TRACKING");
+        heroStatus = "Waiting for journey state";
+        statusLabel = "Connecting";
+        statusSub = "Waiting for app tracking state";
+        subtitle = "Getting route and safety information";
+        liveDotColor = "#9CA3AF";
+      }
+
+      $("heroStatus").textContent = heroStatus;
+      $("journeyStatusValue").textContent = statusLabel;
+      $("journeyStatusSub").textContent = statusSub;
+      $("subtitleText").textContent = subtitle;
+      $("liveDot").style.background = liveDotColor;
+
+      const percent = Math.round(progress * 100);
+      $("progressPercent").textContent = `${percent}%`;
+      $("progressFill").style.width = `${percent}%`;
+
+      $("lastUpdateText").textContent =
+        `Last update: ${location?.updatedAt ? formatDateTime(location.updatedAt) : "--"}`;
+
+      if (checkin.lastConfirmedAt) {
+        $("lastCheckinValue").textContent =
+          formatDateTime(checkin.lastConfirmedAt);
+        $("lastCheckinSub").textContent =
+          formatFullDateTime(checkin.lastConfirmedAt);
+      } else {
+        $("lastCheckinValue").textContent = "Not yet";
+        $("lastCheckinSub").textContent =
+          "Waiting for a confirmed safe check-in";
+      }
+
+      const checkinState = checkin.status ?? "unknown";
+      if (checkinState === "overdue" || checkinState === "expired") {
+        setNotice(
+          "danger",
+          "A safety check-in is overdue. Try contacting the person directly. If you believe there is an emergency, contact emergency services."
+        );
+      } else if (demo.simulated) {
+        setNotice(
+          "warning",
+          demo.paused
+            ? "This shared journey is currently paused in the app."
+            : "This is a demo journey, not live real-world GPS."
+        );
+      } else {
+        setNotice("", "");
+      }
+
+      latestPayload = {
+        fetchedAt: Date.now(),
+        estimatedMinutes,
+        progress,
+        paused: Boolean(demo.paused),
+        simulated: Boolean(demo.simulated),
+        checkinDueAt: checkin.dueAt || null,
+        locationUpdatedAt: location?.updatedAt || null,
+        ended: false,
+      };
+
+      updateLiveTimers();
+    }
+
+    function updateLiveTimers() {
+      if (!latestPayload) return;
+
+      const now = Date.now();
+
+      // Arrival / remaining minutes
+      let baseRemainingSeconds = Math.max(
+        0,
+        Math.round(latestPayload.estimatedMinutes * 60 * (1 - latestPayload.progress))
+      );
+
+      let liveRemainingSeconds = baseRemainingSeconds;
+
+      if (!latestPayload.paused && !latestPayload.ended) {
+        const secondsSinceFetch = Math.floor((now - latestPayload.fetchedAt) / 1000);
+        liveRemainingSeconds = Math.max(0, baseRemainingSeconds - secondsSinceFetch);
+      }
+
+      const liveRemainingMinutes = Math.max(
+        0,
+        Math.ceil(liveRemainingSeconds / 60)
+      );
+
+      $("etaMinutes").textContent = String(liveRemainingMinutes);
+      $("arrivalText").textContent =
+        `Arrival time: ${formatDateTime(now + liveRemainingSeconds * 1000)}`;
+
+      // Next check-in countdown
+      if (latestPayload.checkinDueAt) {
+        const dueMs = new Date(latestPayload.checkinDueAt).getTime();
+        const leftSeconds = Math.floor((dueMs - now) / 1000);
+
+        if (leftSeconds >= 0) {
+          $("nextCheckinValue").textContent = formatCountdown(leftSeconds);
+          $("nextCheckinSub").textContent =
+            `Due at ${formatDateTime(latestPayload.checkinDueAt)}`;
+        } else {
+          $("nextCheckinValue").textContent = "Overdue";
+          $("nextCheckinSub").textContent = "Next check-in was missed";
+        }
+      } else {
+        $("nextCheckinValue").textContent = "--:--";
+        $("nextCheckinSub").textContent = "No active check-in";
+      }
     }
 
     function showError(message, permanent = false) {
-      $("badge").textContent = "UNAVAILABLE";
-      $("badge").className = "badge error";
-      $("status").textContent = message;
-      $("statusDot").className = "dot danger";
+      setMode("error", "UNAVAILABLE");
+      $("heroTitle").textContent = "Journey unavailable";
+      $("heroStatus").textContent = message;
+      $("destinationHeading").textContent = "Tracking unavailable";
+      $("subtitleText").textContent = message;
+      $("journeyStatusValue").textContent = "Unavailable";
+      $("journeyStatusSub").textContent = permanent
+        ? "This link is no longer active"
+        : "Unable to refresh tracking";
+      $("etaMinutes").textContent = "--";
+      $("progressPercent").textContent = "--%";
+      $("progressFill").style.width = "0%";
+      $("arrivalText").textContent = "Arrival time: --";
+      $("lastUpdateText").textContent = "Last update: --";
+      $("nextCheckinValue").textContent = "--:--";
+      $("nextCheckinSub").textContent = "Tracking unavailable";
 
       if (permanent) {
         trackingEnded = true;
         clearSensitiveMap();
+        setNotice("warning", message);
         $("refreshButton").disabled = true;
-      } else {
-        $("locationAge").textContent =
-          "Connection lost. Previously received " +
-          "location may be outdated.";
       }
     }
 
-    async function refresh() {
+    async function refreshTracking() {
       if (!token || trackingEnded) {
         if (!token) {
-          showError("Missing private tracking token.", true);
+          showError("Missing tracking token.", true);
         }
         return;
       }
@@ -803,35 +937,27 @@
           headers: {
             "Content-Type": "application/json",
           },
+          cache: "no-store",
+          referrerPolicy: "no-referrer",
           body: JSON.stringify({
             action: "view",
             token,
           }),
-          cache: "no-store",
-          referrerPolicy: "no-referrer",
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-          const permanent = response.status === 403 ||
-            response.status === 404;
-
-          showError(
-            data.error ?? "Tracking unavailable",
-            permanent
-          );
+          const permanent = response.status === 403 || response.status === 404;
+          showError(data.error || "Tracking unavailable", permanent);
           return;
         }
 
-        updateJourney(data);
-        updateCheckin(data.checkin, data.checkedAt);
-
-        lastSuccessfulUpdate = Date.now();
+        lastSuccessAt = Date.now();
+        updateMainUI(data);
       } catch (error) {
         showError(
-          "Unable to refresh tracking: " +
-          (error.message ?? "Network error")
+          `Could not refresh tracking: ${error.message || "Network error"}`
         );
       } finally {
         if (!trackingEnded) {
@@ -840,22 +966,17 @@
       }
     }
 
-    $("refreshButton").addEventListener(
-      "click",
-      refresh
-    );
+    $("refreshButton").addEventListener("click", refreshTracking);
 
-    refresh();
-
-    setInterval(refresh, 15000);
+    refreshTracking();
+    setInterval(refreshTracking, 15000);
+    setInterval(updateLiveTimers, 1000);
 
     setInterval(() => {
-      if (
-        lastSuccessfulUpdate &&
-        Date.now() - lastSuccessfulUpdate > 60000
-      ) {
-        $("badge").textContent = "UPDATES DELAYED";
-        $("badge").className = "badge demo";
+      if (!lastSuccessAt || trackingEnded) return;
+
+      if (Date.now() - lastSuccessAt > 60000) {
+        setMode("demo", "DELAYED");
       }
     }, 10000);
   </script>
