@@ -1,73 +1,392 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SafeRoute — Live Journey</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0D9488" />
+  <title>SafeRoute | Journey Tracking</title>
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
   <style>
-    body { margin: 0; font-family: -apple-system, sans-serif; }
-    #map { height: 70vh; }
-    #info { padding: 16px; }
-    #status { font-weight: 700; font-size: 18px; }
-    #meta { color: #6B7280; font-size: 14px; margin-top: 4px; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Arial, sans-serif;
+      background: #F3F7F6;
+      color: #123D38;
+    }
+    header {
+      background: white;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #E3EBE8;
+    }
+    .brand { font-size: 19px; font-weight: 850; }
+    .shield { color: #0D9488; }
+    .badge {
+      background: #CCFBF1;
+      color: #0F766E;
+      padding: 7px 11px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    main { max-width: 680px; margin: 0 auto; padding: 18px; }
+    .card {
+      background: white;
+      border: 1px solid #E5ECEA;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 15px rgba(15, 30, 28, .035);
+    }
+    .eyebrow {
+      color: #64748B;
+      font-weight: 800;
+      letter-spacing: .8px;
+      font-size: 10px;
+    }
+    h1 { font-size: 22px; margin: 8px 0; }
+    h2 { font-size: 17px; margin: 0 0 14px; }
+    p { color: #64748B; line-height: 1.6; font-size: 13px; }
+    #map {
+      height: 340px;
+      background: #E0EAE7;
+      border-radius: 15px;
+      overflow: hidden;
+    }
+    .status {
+      font-size: 12px;
+      font-weight: 800;
+      color: #0D9488;
+      padding: 8px 0;
+    }
+    .status.overdue { color: #B91C1C; }
+    .details { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .tile {
+      background: #F7FAF9;
+      padding: 15px;
+      border-radius: 13px;
+    }
+    .tile span {
+      display: block;
+      font-size: 10px;
+      color: #64748B;
+      font-weight: 800;
+      margin-bottom: 9px;
+    }
+    .tile strong { font-size: 13px; }
+    .warning {
+      background: #FEF3C7;
+      color: #92400E;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-top: 14px;
+    }
+    .danger { background: #FEE2E2; color: #991B1B; }
+    .hidden { display: none; }
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #94A3B8;
+      font-size: 11px;
+    }
+    button {
+      width: 100%;
+      background: #0D9488;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    @media (max-width: 440px) {
+      #map { height: 300px; }
+      .details { gap: 8px; }
+      .tile { padding: 12px; }
+    }
   </style>
 </head>
+
 <body>
-  <div id="map"></div>
-  <div id="info">
-    <div id="status">Loading journey...</div>
-    <div id="meta"></div>
-  </div>
+  <header>
+    <div class="brand"><span class="shield">◆</span> SafeRoute</div>
+    <div class="badge" id="badge">Connecting</div>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="eyebrow">PRIVATE JOURNEY TRACKING</div>
+      <h1 id="destination">Loading journey...</h1>
+      <p id="description">
+        Checking the latest shared journey information.
+      </p>
+      <div id="status" class="status">
+        Connecting securely...
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Latest reported location</h2>
+      <div id="map"></div>
+      <p id="locationAge">
+        Waiting for location updates.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Safety check-ins</h2>
+
+      <div class="details">
+        <div class="tile">
+          <span>CHECK-IN STATUS</span>
+          <strong id="checkinStatus">Loading</strong>
+        </div>
+
+        <div class="tile">
+          <span>NEXT CHECK-IN</span>
+          <strong id="nextCheckin">—</strong>
+        </div>
+
+        <div class="tile">
+          <span>LAST CONFIRMED SAFE</span>
+          <strong id="lastSafe">—</strong>
+        </div>
+
+        <div class="tile">
+          <span>LAST SERVER UPDATE</span>
+          <strong id="lastRefresh">—</strong>
+        </div>
+      </div>
+
+      <div id="warning" class="warning hidden"></div>
+
+      <button id="refreshButton" type="button">
+        Refresh tracking
+      </button>
+    </section>
+  </main>
+
+  <footer>
+    Private journey information. Do not share this link.
+    <br />
+    SafeRoute does not replace emergency services.
+  </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
-    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const PROJECT_REF = "YOUR_SUPABASE_PROJECT_REF";
+    const API_URL =
+      `https://${PROJECT_REF}.supabase.co/functions/v1/journey-share`;
 
     const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
+    const token = params.get("token");
 
-    const map = L.map('map').setView([-26.1819, 27.9983], 15);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+    // Remove token from the browser address bar after reading it.
+    if (token) {
+      history.replaceState(null, "", window.location.pathname);
+    }
 
-    let userMarker = null;
-    let destMarker = null;
+    const el = (id) => document.getElementById(id);
 
-    async function poll() {
-      if (!token) {
-        document.getElementById('status').textContent = 'No journey link provided.';
+    const map = L.map("map", {
+      zoomControl: true,
+    }).setView([-26.1819, 27.9983], 13);
+
+    L.tileLayer(
+      "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        maxZoom: 19,
+        attribution: "© OpenStreetMap contributors",
+      }
+    ).addTo(map);
+
+    let marker = null;
+    let lastSuccessfulUpdate = 0;
+
+    function formatTime(value) {
+      if (!value) return "Not yet";
+      const date = new Date(value);
+      return Number.isNaN(date.getTime())
+        ? "Unavailable"
+        : date.toLocaleString();
+    }
+
+    function updateLocation(location) {
+      if (!location) {
+        el("locationAge").textContent =
+          "No location has been received yet.";
         return;
       }
-      const { data, error } = await supabase.rpc('get_shared_journey', { p_token: token });
 
-      if (error || !data) {
-        document.getElementById('status').textContent = 'This journey has ended or the link is invalid.';
+      const lat = Number(location.latitude);
+      const lon = Number(location.longitude);
+
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
         return;
       }
 
-      document.getElementById('status').textContent = `Heading to ${data.destination_name}`;
-      document.getElementById('meta').textContent = `From ${data.origin_name} · ${data.estimated_minutes} min journey`;
-
-      if (!destMarker) {
-        destMarker = L.marker([data.destination_latitude, data.destination_longitude]).addTo(map);
+      if (!marker) {
+        marker = L.circleMarker([lat, lon], {
+          radius: 10,
+          color: "#FFFFFF",
+          weight: 3,
+          fillColor: "#0D9488",
+          fillOpacity: 1,
+        }).addTo(map);
+      } else {
+        marker.setLatLng([lat, lon]);
       }
 
-      if (data.latest_checkpoint) {
-        const { latitude, longitude } = data.latest_checkpoint;
-        if (!userMarker) {
-          userMarker = L.circleMarker([latitude, longitude], { radius: 8, fillColor: '#0D9488', color: '#fff', weight: 2, fillOpacity: 1 }).addTo(map);
-          map.setView([latitude, longitude], 16);
-        } else {
-          userMarker.setLatLng([latitude, longitude]);
-        }
+      map.setView([lat, lon], 16);
+
+      const age = Math.max(
+        0,
+        Math.round(
+          (Date.now() - new Date(location.updatedAt).getTime()) /
+            60000
+        )
+      );
+
+      el("locationAge").textContent =
+        `Last location received ${age} minute(s) ago.`;
+
+      if (age >= 5) {
+        el("locationAge").textContent +=
+          " Location may be stale.";
       }
     }
 
-    poll();
-    setInterval(poll, 4000); // poll every 4 seconds
+    function updateCheckin(checkin) {
+      const status = checkin?.status ?? "unknown";
+
+      el("checkinStatus").textContent =
+        status === "overdue"
+          ? "Overdue"
+          : status === "active"
+            ? "Awaiting next check-in"
+            : status === "completed"
+              ? "Confirmed"
+              : "Unavailable";
+
+      el("nextCheckin").textContent =
+        formatTime(checkin?.dueAt);
+
+      el("lastSafe").textContent =
+        formatTime(checkin?.lastConfirmedAt);
+
+      const warning = el("warning");
+
+      if (status === "overdue") {
+        warning.classList.remove("hidden");
+        warning.classList.add("danger");
+        warning.textContent =
+          "Safety check-in overdue. This does not necessarily mean " +
+          "the person is in danger. Try contacting them directly. " +
+          "If you believe there is an emergency, contact appropriate services.";
+
+        el("status").textContent = "Check-in overdue";
+        el("status").className = "status overdue";
+      } else {
+        warning.classList.add("hidden");
+        warning.classList.remove("danger");
+        el("status").textContent =
+          "Journey tracking active";
+        el("status").className = "status";
+      }
+    }
+
+    async function refresh() {
+      if (!token) {
+        showError("Missing private tracking link.");
+        return;
+      }
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "view",
+            token,
+          }),
+          cache: "no-store",
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            result.error ?? "Tracking unavailable."
+          );
+        }
+
+        el("badge").textContent =
+          result.simulated ? "DEMO" : "LIVE";
+
+        el("destination").textContent =
+          result.journey?.destination ??
+          "Journey in progress";
+
+        el("description").textContent =
+          result.simulated
+            ? "This is simulated journey playback, not real GPS."
+            : "Viewing the latest location shared by SafeRoute.";
+
+        updateLocation(result.location);
+        updateCheckin(result.checkin);
+
+        el("lastRefresh").textContent =
+          formatTime(result.checkedAt);
+
+        lastSuccessfulUpdate = Date.now();
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    function showError(message) {
+      el("badge").textContent = "Unavailable";
+      el("status").textContent = message;
+      el("status").className = "status overdue";
+
+      // Do not continue displaying an old location
+      // as though tracking were still live.
+      if (marker) {
+        map.removeLayer(marker);
+        marker = null;
+      }
+
+      el("locationAge").textContent =
+        "Live tracking is currently unavailable.";
+    }
+
+    el("refreshButton").addEventListener("click", refresh);
+
+    refresh();
+    setInterval(refresh, 15000);
+
+    // Show connection staleness if the website cannot
+    // refresh successfully.
+    setInterval(() => {
+      if (lastSuccessfulUpdate &&
+          Date.now() - lastSuccessfulUpdate > 60000) {
+        el("badge").textContent = "Updates delayed";
+      }
+    }, 10000);
   </script>
 </body>
 </html>
